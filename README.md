@@ -4,14 +4,29 @@
 
 ## 功能
 
-- **时间格式优化** — 将 Go `time.String()` 的长格式（`2026-04-28 23:19:16.077279618 +0800 CST`）替换为简洁格式（`2026-04-28 23:19`）
-- **透明代理** — 不改动卡片结构，只处理时间字段，原样转发给飞书
+### ✅ 时间格式优化
+将 Go `time.String()` 的长格式替换为简洁格式：
+- 输入：`2026-04-28 23:19:16.077279618 +0800 CST`
+- 输出：`2026-04-28 23:19`
+
+### ✅ 动态卡片颜色
+根据告警类型自动切换标题栏颜色：
+- 🟢 **绿色** — 恢复通知（内容含 `[正常]`）
+- 🔴 **红色** — 告警通知（内容含 `[异常]`、`[告警]`、`离线`）
+
+### 🔮 后续扩展（规划中）
+- 告警去重/防刷
+- 多渠道转发（飞书+Telegram）
+- 告警静默时段
+- 告警统计记录（KV/D1）
 
 ## 架构
 
 ```
-哪吒面板 → Cloudflare Worker → 飞书 Webhook
+哪吒面板 → Cloudflare Worker (本代理) → 飞书 Webhook
 ```
+
+代理只做两件事：优化时间格式 + 动态改颜色，卡片结构原样转发。
 
 ## 部署
 
@@ -19,7 +34,7 @@
 # 1. 安装依赖
 npm install
 
-# 2. 设置飞书 Webhook 地址（密钥）
+# 2. 设置飞书 Webhook 地址（密钥，不会出现在代码中）
 npx wrangler secret put FEISHU_WEBHOOK_URL
 # 输入: https://open.feishu.cn/open-apis/bot/v2/hook/xxx
 
@@ -34,16 +49,16 @@ npx wrangler deploy
 https://nezha-feishu-proxy.<你的子域>.workers.dev
 ```
 
+request_body 不需要改动，代理会自动处理。
+
 ## 环境变量
 
 | 变量 | 说明 | 设置方式 |
 |:-----|:-----|:---------|
-| `FEISHU_WEBHOOK_URL` | 飞书 Webhook 地址 | `wrangler secret put` |
+| `FEISHU_WEBHOOK_URL` | 飞书 Webhook 地址 | `wrangler secret put`（加密存储） |
 
-## 后续扩展
+## 安全
 
-- 告警去重/防刷
-- 根据告警类型动态改卡片颜色
-- 多渠道转发
-- 告警静默时段
-- 告警统计记录（KV/D1）
+- 仓库中**不包含**任何密钥、Token、Webhook URL
+- 飞书 Webhook 地址通过 Cloudflare Secret 加密存储
+- 只接受 POST 请求，其他方法返回 405
