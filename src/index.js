@@ -1,4 +1,4 @@
-var VERSION = '1.0.3';
+var VERSION = '1.0.4';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -15,13 +15,12 @@ async function handleRequest(request) {
   }
   try {
     var body = await request.json();
-    var bodyStr = JSON.stringify(body);
-    bodyStr = formatDateTime(bodyStr);
-    bodyStr = updateCardColor(body, bodyStr);
+    formatDateTime(body);
+    updateCard(body);
     var feishuResponse = await fetch(FEISHU_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: bodyStr,
+      body: JSON.stringify(body),
     });
     var result = await feishuResponse.json();
     return new Response(JSON.stringify(result), {
@@ -114,33 +113,55 @@ function getStatusPage() {
 </html>`;
 }
 
+// Go time.String() 格式: 2026-04-28 23:19:16.077279618 +0800 CST
+var TIME_RE = /([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}):[0-9]{2}[.][0-9]+ [+-][0-9]{4} [A-Za-z]+/g;
+
 /**
- * 将 Go time.String() 格式替换为简洁格式
- * 匹配: 2026-04-28 23:19:16.077279618 +0800 CST
- * 替换: 2026-04-28 23:19
+ * 深度遍历对象，替换所有字符串中的时间格式
  */
-function formatDateTime(jsonStr) {
-  return jsonStr.replace(
-    /([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}):[0-9]{2}[.][0-9]+ [+-][0-9]{4} [A-Za-z]+/g,
-    '$1 $2'
-  );
+function formatDateTime(obj) {
+  if (typeof obj === 'string') {
+    return obj.replace(TIME_RE, '$1 $2');
+  }
+  if (obj && typeof obj === 'object') {
+    for (var key in obj) {
+      if (typeof obj[key] === 'string') {
+        obj[key] = obj[key].replace(TIME_RE, '$1 $2');
+      } else if (typeof obj[key] === 'object') {
+        formatDateTime(obj[key]);
+      }
+    }
+  }
+  return obj;
 }
 
 /**
- * 根据告警类型动态修改卡片颜色
- * [正常]/[恢复] → 绿色
- * [异常]/[告警]/[事件]/离线 → 红色
+ * 根据告警类型修改卡片颜色和标题
+ * [正常]/[恢复] → 绿色 + 标题含"恢复"
+ * [异常]/[告警]/[事件]/离线 → 红色 + 标题含"告警"
  */
-function updateCardColor(obj, jsonStr) {
-  if (!obj.card || !obj.card.header) return jsonStr;
-  var content = jsonStr;
-  var hasRecovery = content.indexOf('[正常]') !== -1 || // [正常]
-                    content.indexOf('[恢复]') !== -1;   // [恢复]
-  var hasAlert = content.indexOf('[异常]') !== -1 ||   // [异常]
-                 content.indexOf('[告警]') !== -1 ||   // [告警]
-                 content.indexOf('[事件]') !== -1 ||   // [事件]
-                 content.indexOf('离线') !== -1;       // 离线
-  if (!hasRecovery && !hasAlert) return jsonStr;
-  obj.card.header.template = hasRecovery ? 'green' : 'red';
-  return JSON.stringify(obj);
+function updateCard(obj) {
+  if (!obj.card || !obj.card.header) return;
+  var content = JSON.stringify(obj);
+  var hasRecovery = content.indexOf('[正常]') !== -1 ||
+                    content.indexOf('[恢复]') !== -1;
+  var hasAlert = content.indexOf('[异常]') !== -1 ||
+                 content.indexOf('[告警]') !== -1 ||
+                 content.indexOf('[事件]') !== -1 ||
+                 content.indexOf('离线') !== -1;
+  if (!hasRecovery && !hasAlert) return;
+
+  var title = obj.card.header.title || '';
+  if (hasRecovery) {
+    obj.card.header.template = 'green';
+    title = title.replace('状态通知', '状态恢复');
+  } else {
+    obj.card.header.template = 'red';
+    if (content.indexOf('离线') !== -1) {
+      title = title.replace('状态通知', '离线告警');
+    } else {
+      title = title.replace('状态通知', '状态告警');
+    }
+  }
+  obj.card.header.title = title;
 }
