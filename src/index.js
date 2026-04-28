@@ -1,4 +1,4 @@
-var VERSION = '1.0.2';
+var VERSION = '1.0.3';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -74,11 +74,15 @@ function getStatusPage() {
       padding:8px 0;font-size:14px;color:#8b949e;
     }
     .features .icon{font-size:16px;width:24px;text-align:center}
-    .arch{
-      font-size:12px;color:#484f58;margin-bottom:24px;
-      padding:10px;background:#161b22;border-radius:8px;
-      font-family:monospace;word-break:break-all;
+    .flow{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+    .flow .node{
+      font-size:12px;padding:6px 14px;border-radius:8px;
+      font-weight:500;white-space:nowrap;
     }
+    .flow .n1{background:#1c2d1c;color:#3fb950;border:1px solid #2d4a2d}
+    .flow .n2{background:#2d1f0e;color:#f0883e;border:1px solid #4a3520}
+    .flow .n3{background:#0e2d4a;color:#58a6ff;border:1px solid #1a3a5c}
+    .flow .arrow{color:#484f58;font-size:14px}
     a{color:#58a6ff;text-decoration:none;font-size:13px}
     a:hover{text-decoration:underline}
   </style>
@@ -97,7 +101,13 @@ function getStatusPage() {
       <div class="item"><span class="icon">&#127912;</span>&#21160;&#24577;&#21345;&#29255;&#39068;&#33394; &#8226; &#32511;&#33394;&#24674;&#22797; / &#32418;&#33394;&#21578;&#35686;</div>
       <div class="item"><span class="icon">&#128232;</span>&#21345;&#29255;&#32467;&#26500;&#21407;&#26679;&#36716;&#21457;&#39134;&#20070;</div>
     </div>
-    <div class="arch">&#21738;&#21522;&#38754;&#26495; &#8594; Cloudflare Worker &#8594; &#39134;&#20070; Webhook</div>
+    <div class="flow">
+      <span class="node n1">&#21738;&#21522;&#38754;&#26495;</span>
+      <span class="arrow">&#8594;</span>
+      <span class="node n2">Cloudflare Worker</span>
+      <span class="arrow">&#8594;</span>
+      <span class="node n3">&#39134;&#20070; Webhook</span>
+    </div>
     <a href="https://github.com/zeno528/nezha-feishu-proxy" target="_blank">GitHub</a>
   </div>
 </body>
