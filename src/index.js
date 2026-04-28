@@ -1,4 +1,4 @@
-var VERSION = '1.0.7';
+var VERSION = '1.0.8';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -55,7 +55,11 @@ function getStatusPage() {
       max-width:460px;width:90%;text-align:center;
       box-shadow:0 8px 32px rgba(0,0,0,.4);
     }
-    .logo{font-size:28px;font-weight:700;margin-bottom:8px;color:#fff}
+    .logo{
+      font-size:26px;font-weight:700;color:#F8FAFC;margin-bottom:8px;
+      font-family:'Space Grotesk','SF Mono',SFMono-Regular,Consolas,monospace;
+      letter-spacing:-.3px;
+    }
     .version{
       display:inline-block;background:#2d333b;border-radius:12px;
       padding:3px 12px;font-size:13px;color:#8b949e;margin-bottom:28px;
@@ -83,13 +87,14 @@ function getStatusPage() {
     .flow .n2{background:#2d1f0e;color:#f0883e;border:1px solid #4a3520}
     .flow .n3{background:#0e2d4a;color:#58a6ff;border:1px solid #1a3a5c}
     .flow .arrow{color:#484f58;font-size:14px}
-    a{color:#58a6ff;text-decoration:none;font-size:13px}
+    a{color:#58a6ff;text-decoration:none;font-size:13px;display:inline-flex;align-items:center;gap:5px}
     a:hover{text-decoration:underline}
+    a img{width:14px;height:14px}
   </style>
 </head>
 <body>
   <div class="card">
-    <div class="logo">nezha-feishu-proxy</div>
+    <div class="logo">Nezha-Feishu-Proxy</div>
     <div class="version">v${VERSION}</div>
     <div class="status">
       <div class="dot"></div>
@@ -109,8 +114,9 @@ function getStatusPage() {
       <span class="node n3">&#39134;&#20070; Webhook</span>
     </div>
     <div style="display:flex;gap:16px;justify-content:center">
-      <a href="https://github.com/zeno528/nezha-feishu-proxy" target="_blank">GitHub</a>
-      <a href="https://dash.cloudflare.com" target="_blank">Workers</a>
+      <a href="https://nezha.hellohub.top" target="_blank"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjMwIDE3IDE1NiAxNzAiPjxwYXRoIGZpbGw9IiMwQTk0RjIiIGQ9Ik0zMCAxN3Y2MS44NEw3My41ODggMTA2IDE3NyA0My4wODJsLTcuMzM2LS41NDJWMTd6Ii8+PHBhdGggZmlsbD0iIzAzMzhENiIgZD0iTTc3LjQyIDEzOS44NDVMMzAgMTA5Ljk0M3Y0Mi42TDk5LjU4NSAxODdsNjkuNTgyLTM0LjQ1N1Y3NS4zOEwxODYgNDh6Ii8+PC9zdmc+">哪吒面板</a>
+      <a href="https://github.com/zeno528/nezha-feishu-proxy" target="_blank"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggZmlsbD0iI2UwZTBlMCIgZD0iTTggMEMzLjU4IDAgMCAzLjU4IDAgOGMwIDMuNTQgMi4yOSA2LjUzIDUuNDcgNy41OS40LjA3LjU1LS4xNy41NS0uMzggMC0uMTktLjAxLS44Mi0uMDEtMS40OS0yLjAxLjM3LTIuNTMtLjQ5LTIuNjktLjk0LS4wOS0uMjMtLjQ4LS45NC0uODItMS4xMy0uMjgtLjE1LS42OC0uNTItLjAxLS41My42My0uMDEgMS4wOC41OCAxLjIzLjgyLjcyIDEuMjEgMS44Ny44NyAyLjMzLjY2LjA3LS41Mi4yOC0uODcuNTEtMS4wNy0xLjc4LS4yLTMuNjQtLjg5LTMuNjQtMy45NSAwLS44Ny4zMS0xLjU5LjgyLTIuMTUtLjA4LS4yLS4zNi0xLjAyLjA4LTIuMTIgMCAwIC42Ny0uMjEgMi4yLjgyLjY0LS4xOCAxLjMyLS4yNyAyLS4yNy42OCAwIDEuMzYuMDkgMiAuMjcgMS41My0xLjA0IDIuMi0uODIgMi4yLS44Mi40NCAxLjEuMTYgMS45Mi4wOCAyLjEyLjUxLjU2LjgyIDEuMjcuODIgMi4xNSAwIDMuMDctMS44NyAzLjc1LTMuNjUgMy45NS4yOS4yNS41NC43My41NCAxLjQ4IDAgMS4wNy0uMDEgMS45My0uMDEgMi4yIDAgLjIxLjE1LjQ2LjU1LjM4QTguMDEzIDguMDEzIDAgMDAxNiA4YzAtNC40Mi0zLjU4LTgtOC04eiIvPjwvc3ZnPg==">GitHub</a>
+      <a href="https://dash.cloudflare.com" target="_blank"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0YzODAyMCIgZD0iTTMxLjUgMzIuNUgxMi42Yy0uNCAwLS43LS4zLS43LS43cy4zLS43LjctLjdoMTguMmwxLjItNC41SDE0LjhjLS40IDAtLjctLjMtLjctLjdzLjMtLjcuNy0uN2gxOGwxLjItNC41SDE2LjVjLTMuNSAwLTYuNCAyLjUtNyA1LjhsLTEuMiA1LjdjLS4yIDEgMCAyIC41IDIuOC42LjkgMS41IDEuNCAyLjUgMS40aDIwLjdsLTAuNS0zLjl6Ii8+PHBhdGggZmlsbD0iI0YzODAyMCIgZD0iTTQwLjggMjcuM2MtLjYtLjktMS41LTEuNC0yLjUtMS40aC0yLjNsLTEuMiA0LjVoMi4zYy40IDAgLjcuMy43LjdzLS4zLjctLjcuN2gtMi44bC0xLjIgNC41aDNjMy41IDAgNi40LTIuNSA3LTUuOGwuNC0xLjhjLjItMSAwLTItLjUtMi44bC0yLjIgMS40eiIvPjwvc3ZnPg==">Workers</a>
     </div>
   </div>
 </body>
