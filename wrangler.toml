@@ -1,0 +1,6 @@
+name = "nezha-feishu-proxy"
+main = "src/index.js"
+compatibility_date = "2026-04-28"
+
+[vars]
+# FEISHU_WEBHOOK_URL 通过 wrangler secret 设置，不写在这里
