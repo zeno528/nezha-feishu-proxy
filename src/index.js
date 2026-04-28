@@ -1,4 +1,4 @@
-var VERSION = '1.0.5';
+var VERSION = '1.0.6';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -42,6 +42,7 @@ function getStatusPage() {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>nezha-feishu-proxy</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{
@@ -107,7 +108,10 @@ function getStatusPage() {
       <span class="arrow">&#8594;</span>
       <span class="node n3">&#39134;&#20070; Webhook</span>
     </div>
-    <a href="https://github.com/zeno528/nezha-feishu-proxy" target="_blank">GitHub</a>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <a href="https://github.com/zeno528/nezha-feishu-proxy" target="_blank">GitHub</a>
+      <a href="https://dash.cloudflare.com" target="_blank">Workers</a>
+    </div>
   </div>
 </body>
 </html>`;
