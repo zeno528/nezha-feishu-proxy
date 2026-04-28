@@ -1,5 +1,9 @@
 # nezha-feishu-proxy
 
+[![GitHub release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fzeno528%2Fnezha-feishu-proxy%2Fmain%2Fpackage.json&query=%24.version&label=version)](https://github.com/zeno528/nezha-feishu-proxy/releases)
+[![JavaScript](https://img.shields.io/badge/Language-JavaScript-F7DF1E?logo=javascript&logoColor=black)]()
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-F38020?logo=cloudflare&logoColor=white)](https://workers.cloudflare.com/)
+
 哪吒监控通知飞书代理，部署在 Cloudflare Worker 上。
 
 ## 功能
