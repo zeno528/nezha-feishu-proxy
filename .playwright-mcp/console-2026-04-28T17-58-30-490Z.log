@@ -1,0 +1,8 @@
+[     496ms] [ERROR] Failed to load resource: net::ERR_BLOCKED_BY_CLIENT @ https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516:0
+[     727ms] [LOG] 购物党隐私说明（键入disable_gwd_privacy()不再显示本声明）： @ chrome-extension://jgphnjokjhjlcnnajmfjlacjnjkhleah/js/main.js:461
+[     727ms] [LOG]     我们不会收集用户个人隐私信息，只会收集一些简单的产品交互行为，帮助改善产品，例如记录某个模块点击次数，更多信息请关注： @ chrome-extension://jgphnjokjhjlcnnajmfjlacjnjkhleah/js/main.js:462
+[     727ms] [LOG] 隐私协议: https://www.gwdang.com/static_page/privacy_policy.html @ chrome-extension://jgphnjokjhjlcnnajmfjlacjnjkhleah/js/main.js:463
+[    1174ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ https://nezha.hellohub.top/:0
+[    2650ms] [INFO] This page uses Chrome's Built-In AI features (LanguageDetector)! We're always improving our models; please submit your feedback here: https://issues.chromium.org/issues/new?component=1583316 @ chrome-extension://bpoadfkcbjbfhfodiogcnhhhpibjhbnh/content_main.js:4528
+[    2683ms] [LOG] All resources have been injected and executed in sequence. @ https://nezha.hellohub.top/assets/index.D8kxLcmd.js:0
+[    2768ms] [LOG] WebSocket connected @ https://nezha.hellohub.top/assets/index.D8kxLcmd.js:7

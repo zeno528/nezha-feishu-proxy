@@ -1,4 +1,4 @@
-var VERSION = '1.0.4';
+var VERSION = '1.0.5';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -151,17 +151,26 @@ function updateCard(obj) {
                  content.indexOf('离线') !== -1;
   if (!hasRecovery && !hasAlert) return;
 
-  var title = obj.card.header.title || '';
+  // 飞书卡片 header.title 是 {tag, content} 对象，不是字符串
+  var titleObj = obj.card.header.title;
+  var titleText = typeof titleObj === 'string' ? titleObj :
+                  (titleObj && titleObj.content) || '';
+
   if (hasRecovery) {
     obj.card.header.template = 'green';
-    title = title.replace('状态通知', '状态恢复');
+    titleText = titleText.replace('状态通知', '状态恢复');
   } else {
     obj.card.header.template = 'red';
     if (content.indexOf('离线') !== -1) {
-      title = title.replace('状态通知', '离线告警');
+      titleText = titleText.replace('状态通知', '离线告警');
     } else {
-      title = title.replace('状态通知', '状态告警');
+      titleText = titleText.replace('状态通知', '状态告警');
     }
   }
-  obj.card.header.title = title;
+
+  if (typeof titleObj === 'string') {
+    obj.card.header.title = titleText;
+  } else if (titleObj) {
+    titleObj.content = titleText;
+  }
 }
