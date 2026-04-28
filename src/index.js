@@ -43,16 +43,18 @@ function formatDateTime(jsonStr) {
 
 /**
  * 根据告警类型动态修改卡片颜色
- * [正常] → 绿色（恢复通知）
- * [异常]/[告警]/离线 → 红色（告警通知）
+ * [正常]/[恢复] → 绿色
+ * [异常]/[告警]/[事件]/离线 → 红色
  */
 function updateCardColor(obj, jsonStr) {
   if (!obj.card || !obj.card.header) return jsonStr;
   var content = jsonStr;
-  var hasRecovery = content.indexOf('[\u6b63\u5e38]') !== -1; // [正常]
-  var hasAlert = content.indexOf('[\u5f02\u5e38]') !== -1 ||   // [异常]
-                 content.indexOf('[\u544a\u8b66]') !== -1 ||   // [告警]
-                 content.indexOf('\u79bb\u7ebf') !== -1;       // 离线
+  var hasRecovery = content.indexOf('[正常]') !== -1 || // [正常]
+                    content.indexOf('[恢复]') !== -1;   // [恢复]
+  var hasAlert = content.indexOf('[异常]') !== -1 ||   // [异常]
+                 content.indexOf('[告警]') !== -1 ||   // [告警]
+                 content.indexOf('[事件]') !== -1 ||   // [事件]
+                 content.indexOf('离线') !== -1;       // 离线
   if (!hasRecovery && !hasAlert) return jsonStr;
   obj.card.header.template = hasRecovery ? 'green' : 'red';
   return JSON.stringify(obj);
