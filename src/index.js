@@ -1,46 +1,33 @@
-/**
- * Nezha Feishu Proxy - 哪吒监控通知飞书代理
- * 
- * 功能：拦截哪吒面板的通知，优化时间格式后转发给飞书 Webhook
- * 部署：Cloudflare Worker
- */
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request));
+});
 
-export default {
-  async fetch(request, env) {
-    // 只接受 POST 请求
-    if (request.method !== 'POST') {
-      return new Response('Method Not Allowed', { status: 405 });
-    }
-
-    try {
-      const body = await request.json();
-
-      // 格式化时间：替换所有 Go time.String() 格式的时间
-      // 输入: "2026-04-28 23:19:16.077279618 +0800 CST"
-      // 输出: "2026-04-28 23:19"
-      const formattedBody = formatDateTime(JSON.stringify(body));
-
-      // 转发给飞书 Webhook
-      const feishuResponse = await fetch(env.FEISHU_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: formattedBody,
-      });
-
-      const result = await feishuResponse.json();
-
-      return new Response(JSON.stringify(result), {
-        status: feishuResponse.status,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    } catch (error) {
-      return new Response(JSON.stringify({ error: error.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-  },
-};
+async function handleRequest(request) {
+  if (request.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
+  }
+  try {
+    var body = await request.json();
+    var bodyStr = JSON.stringify(body);
+    bodyStr = formatDateTime(bodyStr);
+    bodyStr = updateCardColor(body, bodyStr);
+    var feishuResponse = await fetch(FEISHU_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: bodyStr,
+    });
+    var result = await feishuResponse.json();
+    return new Response(JSON.stringify(result), {
+      status: feishuResponse.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+}
 
 /**
  * 将 Go time.String() 格式替换为简洁格式
@@ -48,9 +35,25 @@ export default {
  * 替换: 2026-04-28 23:19
  */
 function formatDateTime(jsonStr) {
-  // Go time.String() 格式: YYYY-MM-DD HH:MM:SS.nnnnnnnnn +ZZZZ TimeZone
   return jsonStr.replace(
-    /(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}):\d{2}\.\d+ [+-]\d{4} \w+/g,
+    /([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}):[0-9]{2}[.][0-9]+ [+-][0-9]{4} [A-Za-z]+/g,
     '$1 $2'
   );
+}
+
+/**
+ * 根据告警类型动态修改卡片颜色
+ * [正常] → 绿色（恢复通知）
+ * [异常]/[告警]/离线 → 红色（告警通知）
+ */
+function updateCardColor(obj, jsonStr) {
+  if (!obj.card || !obj.card.header) return jsonStr;
+  var content = jsonStr;
+  var hasRecovery = content.indexOf('[\u6b63\u5e38]') !== -1; // [正常]
+  var hasAlert = content.indexOf('[\u5f02\u5e38]') !== -1 ||   // [异常]
+                 content.indexOf('[\u544a\u8b66]') !== -1 ||   // [告警]
+                 content.indexOf('\u79bb\u7ebf') !== -1;       // 离线
+  if (!hasRecovery && !hasAlert) return jsonStr;
+  obj.card.header.template = hasRecovery ? 'green' : 'red';
+  return JSON.stringify(obj);
 }
