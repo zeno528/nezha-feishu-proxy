@@ -1,4 +1,4 @@
-var VERSION = '1.0.6';
+var VERSION = '1.0.7';
 
 addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request));
@@ -160,15 +160,16 @@ function updateCard(obj) {
   var titleText = typeof titleObj === 'string' ? titleObj :
                   (titleObj && titleObj.content) || '';
 
+  // 替换 🖥️ 图标，用 ✅/🔴 区分恢复和告警
   if (hasRecovery) {
     obj.card.header.template = 'green';
-    titleText = titleText.replace('状态通知', '状态恢复');
+    titleText = titleText.replace('🖥️', '✅').replace('状态通知', '已恢复');
   } else {
     obj.card.header.template = 'red';
     if (content.indexOf('离线') !== -1) {
-      titleText = titleText.replace('状态通知', '离线告警');
+      titleText = titleText.replace('🖥️', '🔴').replace('状态通知', '离线');
     } else {
-      titleText = titleText.replace('状态通知', '状态告警');
+      titleText = titleText.replace('🖥️', '🔴').replace('状态通知', '告警');
     }
   }
 
